@@ -119,7 +119,6 @@ const HomePage = () => {
                 src={placeholderPhotos[currentSlide]}
                 alt={`Photo ${currentSlide + 1}`}
                 className="w-full h-80 object-cover rounded-xl lumos-hover"
-                className="w-full h-80 object-cover rounded-xl"
               />
               <p className="mt-3 text-center font-heading text-lg font-semibold text-foreground">
                 {funCaptions[currentSlide]}
