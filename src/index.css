@@ -1,95 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 45 100% 97%;
+    --foreground: 330 60% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 45 80% 95%;
+    --card-foreground: 330 60% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 45 100% 97%;
+    --popover-foreground: 330 60% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 330 85% 50%;
+    --primary-foreground: 45 100% 97%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 38 95% 55%;
+    --secondary-foreground: 330 60% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 30 40% 90%;
+    --muted-foreground: 330 20% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 25 95% 55%;
+    --accent-foreground: 45 100% 97%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 38 50% 80%;
+    --input: 38 50% 80%;
+    --ring: 330 85% 50%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    --gold: 43 96% 56%;
+    --gold-foreground: 330 60% 15%;
+    --magenta: 330 85% 50%;
+    --magenta-glow: 330 90% 65%;
+    --saffron: 25 95% 55%;
+    --festive-yellow: 48 100% 60%;
+    --desi-green: 140 60% 40%;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -100,6 +61,93 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Baloo 2', cursive;
+  }
+}
+
+@layer components {
+  .font-heading {
+    font-family: 'Baloo 2', cursive;
+  }
+
+  .font-body {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .font-hindi {
+    font-family: 'Tiro Devanagari Hindi', serif;
+  }
+
+  .text-gradient-desi {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--magenta)), hsl(var(--saffron)), hsl(var(--gold)));
+  }
+
+  .bg-gradient-desi {
+    background: linear-gradient(135deg, hsl(var(--magenta)), hsl(var(--saffron)));
+  }
+
+  .bg-gradient-festive {
+    background: linear-gradient(135deg, hsl(var(--festive-yellow)), hsl(var(--saffron)), hsl(var(--magenta)));
+  }
+
+  .card-desi {
+    @apply rounded-2xl border-2 overflow-hidden;
+    border-color: hsl(var(--gold) / 0.5);
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background)));
+    box-shadow: 0 4px 20px hsl(var(--magenta) / 0.1), 0 0 40px hsl(var(--gold) / 0.08);
+  }
+
+  .text-3d {
+    text-shadow:
+      2px 2px 0 hsl(var(--saffron)),
+      4px 4px 0 hsl(var(--gold) / 0.6),
+      6px 6px 0 hsl(var(--magenta) / 0.3),
+      8px 8px 15px hsl(var(--magenta) / 0.2);
+  }
+
+  .glow-magenta {
+    box-shadow: 0 0 20px hsl(var(--magenta) / 0.4), 0 0 60px hsl(var(--magenta) / 0.15);
+  }
+
+  .hover-bounce {
+    @apply transition-transform duration-300;
+  }
+  .hover-bounce:hover {
+    transform: scale(1.05) rotate(-1deg);
+  }
+}
+
+/* Floating diya animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(5deg); }
+  75% { transform: translateY(-8px) rotate(-3deg); }
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 1s ease-in-out infinite;
 }
