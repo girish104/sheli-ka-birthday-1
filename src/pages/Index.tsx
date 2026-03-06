@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import FloatingParticles from "@/components/FloatingParticles";
+import HouseDivider from "@/components/HouseDivider";
 import confetti from "canvas-confetti";
 
 const SISTER_NAME = "[Her Name]";
@@ -45,12 +46,12 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-16 relative overflow-hidden">
+    <div className="min-h-screen pt-16 relative overflow-hidden parchment-overlay">
       <FloatingParticles />
 
       {/* Hero Section */}
       <section
-        className="relative min-h-[80vh] flex items-center justify-center bg-cover bg-center"
+        className="relative min-h-[80vh] flex items-center justify-center bg-cover bg-center mist-effect"
         style={{ backgroundImage: `url(${heroBg})` }}
       >
         <div className="absolute inset-0 bg-foreground/40" />
@@ -96,6 +97,8 @@ const HomePage = () => {
         </div>
       </section>
 
+      <HouseDivider house="gryffindor" />
+
       {/* Photo Carousel */}
       <section className="py-16 px-4">
         <h2 className="text-4xl font-heading font-bold text-center text-gradient-desi mb-10">
@@ -115,6 +118,7 @@ const HomePage = () => {
               <img
                 src={placeholderPhotos[currentSlide]}
                 alt={`Photo ${currentSlide + 1}`}
+                className="w-full h-80 object-cover rounded-xl lumos-hover"
                 className="w-full h-80 object-cover rounded-xl"
               />
               <p className="mt-3 text-center font-heading text-lg font-semibold text-foreground">
@@ -139,6 +143,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      <HouseDivider house="hufflepuff" />
 
       {/* Fun Stats */}
       <section className="py-12 px-4 bg-gradient-desi">

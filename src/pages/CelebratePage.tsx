@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import cakeImg from "@/assets/cake.png";
 import FloatingParticles from "@/components/FloatingParticles";
+import HouseDivider from "@/components/HouseDivider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,7 +30,7 @@ const CelebratePage = () => {
     // Epic confetti blast
     const duration = 4000;
     const end = Date.now() + duration;
-    const colors = ["#e91e8c", "#f59e0b", "#ef6c00", "#ffd700", "#ff1493"];
+    const colors = ["#e91e8c", "#f59e0b", "#ef6c00", "#ffd700", "#ff1493", "#4169E1", "#7B68EE"];
 
     const frame = () => {
       confetti({
@@ -49,6 +50,21 @@ const CelebratePage = () => {
       if (Date.now() < end) requestAnimationFrame(frame);
     };
     frame();
+
+    // Magical star burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        spread: 360,
+        startVelocity: 20,
+        gravity: 0.3,
+        ticks: 100,
+        origin: { x: 0.5, y: 0.4 },
+        colors: ["#FFD700", "#7B68EE", "#4169E1"],
+        shapes: ["star"],
+        scalar: 1.5,
+      });
+    }, 500);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,7 +80,7 @@ const CelebratePage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-16 relative">
+    <div className="min-h-screen pt-20 pb-16 relative parchment-overlay">
       <FloatingParticles />
 
       <div className="container mx-auto px-4">
@@ -82,18 +98,27 @@ const CelebratePage = () => {
           </p>
         </motion.div>
 
-        <div className="max-w-md mx-auto text-center mb-16">
+        <div className="max-w-md mx-auto text-center mb-16 relative">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={!cakeCut ? handleCakeCut : undefined}
             className={`cursor-pointer relative inline-block ${!cakeCut ? "animate-pulse-glow rounded-full" : ""}`}
           >
-            <img
-              src={cakeImg}
-              alt="Birthday Cake"
-              className="w-64 h-64 object-contain mx-auto drop-shadow-2xl"
-            />
+            <div className="relative inline-block">
+              {/* Flickering candle flames above cake */}
+              {!cakeCut && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex gap-6">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="candle-flame" style={{ width: 8, height: 14, animationDelay: `${i * 0.2}s` }} />
+                  ))}
+                </div>
+              )}
+              <img
+                src={cakeImg}
+                alt="Birthday Cake"
+                className="w-64 h-64 object-contain mx-auto drop-shadow-2xl"
+              />
             {!cakeCut && (
               <motion.p
                 animate={{ y: [0, -8, 0] }}
@@ -103,6 +128,7 @@ const CelebratePage = () => {
                 👆 Cake pe click kar ke kaat! 🔪
               </motion.p>
             )}
+            </div>
           </motion.div>
 
           <AnimatePresence>
@@ -139,6 +165,8 @@ const CelebratePage = () => {
           </AnimatePresence>
         </div>
 
+        <HouseDivider house="slytherin" />
+
         {/* Guestbook */}
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-heading font-bold text-center text-gradient-desi mb-8">
@@ -170,7 +198,7 @@ const CelebratePage = () => {
                   className="mt-1 border-primary/30 focus:border-primary"
                 />
               </div>
-              <Button type="submit" className="w-full bg-gradient-desi text-primary-foreground font-heading font-bold text-lg hover:opacity-90 transition-opacity">
+              <Button type="submit" className="w-full bg-gradient-desi text-primary-foreground font-heading font-bold text-lg hover:opacity-90 transition-opacity spell-spark">
                 Bhej De! 🚀
               </Button>
             </div>
