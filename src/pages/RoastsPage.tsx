@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import FloatingParticles from "@/components/FloatingParticles";
+import HouseDivider from "@/components/HouseDivider";
 
 const roasts = [
   {
@@ -56,7 +57,7 @@ const roasts = [
 
 const RoastsPage = () => {
   return (
-    <div className="min-h-screen pt-20 pb-16 relative">
+    <div className="min-h-screen pt-20 pb-16 relative parchment-overlay">
       <FloatingParticles />
 
       <div className="container mx-auto px-4">
@@ -73,6 +74,8 @@ const RoastsPage = () => {
           </p>
         </motion.div>
 
+        <HouseDivider house="ravenclaw" />
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {roasts.map((roast, i) => (
             <motion.div
@@ -82,7 +85,7 @@ const RoastsPage = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08, type: "spring", bounce: 0.3 }}
               whileHover={{ scale: 1.05, rotate: -1 }}
-              className="card-desi p-6 cursor-pointer group"
+              className="card-desi p-6 cursor-pointer group lumos-hover"
             >
               <div
                 className={`w-16 h-16 rounded-full bg-gradient-to-br ${roast.color} flex items-center justify-center text-3xl mx-auto mb-4 group-hover:animate-wiggle`}

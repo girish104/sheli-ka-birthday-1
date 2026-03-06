@@ -120,6 +120,93 @@
   .hover-bounce:hover {
     transform: scale(1.05) rotate(-1deg);
   }
+
+  /* Lumos hover glow for images */
+  .lumos-hover {
+    @apply transition-all duration-500;
+  }
+  .lumos-hover:hover {
+    box-shadow: 0 0 25px hsl(210, 80%, 65% / 0.5), 0 0 60px hsl(210, 90%, 70% / 0.25);
+    filter: brightness(1.1);
+  }
+
+  /* Spell spark button effect */
+  .spell-spark {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+  .spell-spark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--spark-x, 50%) var(--spark-y, 50%), hsl(43, 96%, 76% / 0.4) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .spell-spark:hover::after {
+    opacity: 1;
+  }
+  .spell-spark:hover {
+    box-shadow: 0 0 15px hsl(43, 96%, 56% / 0.4), 0 0 30px hsl(330, 85%, 50% / 0.15);
+  }
+
+  /* Parchment overlay */
+  .parchment-overlay {
+    position: relative;
+  }
+  .parchment-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 28px,
+        hsl(38, 40%, 60% / 0.04) 28px,
+        hsl(38, 40%, 60% / 0.04) 29px
+      );
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+  }
+
+  /* Gold foil accent */
+  .gold-foil-accent {
+    background-image: linear-gradient(135deg, hsl(43, 96%, 56% / 0.15), transparent 50%, hsl(43, 96%, 56% / 0.1));
+  }
+
+  /* Candle flame flicker */
+  .candle-flame {
+    background: radial-gradient(ellipse at center bottom, hsl(48, 100%, 60%), hsl(30, 100%, 50%) 50%, hsl(15, 100%, 40%) 80%, transparent);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.8s ease-in-out infinite alternate;
+  }
+
+  /* Golden snitch glow */
+  .golden-glow-dot {
+    filter: drop-shadow(0 0 6px hsl(43, 96%, 56% / 0.6));
+  }
+
+  /* Patronus ethereal glow */
+  .patronus-glow {
+    filter: drop-shadow(0 0 10px hsl(200, 80%, 70% / 0.5));
+  }
+
+  /* Mist effect */
+  .mist-effect {
+    position: relative;
+  }
+  .mist-effect::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to top, hsl(var(--background)), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 /* Floating diya animation */
@@ -138,6 +225,14 @@
 @keyframes wiggle {
   0%, 100% { transform: rotate(-3deg); }
   50% { transform: rotate(3deg); }
+}
+
+@keyframes flicker {
+  0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+  25% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+  50% { transform: scale(0.95) rotate(-1deg); opacity: 0.85; }
+  75% { transform: scale(1.02) rotate(2deg); opacity: 1; }
+  100% { transform: scale(0.98) rotate(-1deg); opacity: 0.9; }
 }
 
 .animate-float {
