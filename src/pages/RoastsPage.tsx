@@ -85,7 +85,7 @@ const RoastsPage = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08, type: "spring", bounce: 0.3 }}
               whileHover={{ scale: 1.05, rotate: -1 }}
-              className="card-desi p-6 cursor-pointer group lumos-hover">
+              className="card-desi p-6 cursor-pointer group lumos-hover"
             >
               <div
                 className={`w-16 h-16 rounded-full bg-gradient-to-br ${roast.color} flex items-center justify-center text-3xl mx-auto mb-4 group-hover:animate-wiggle`}
