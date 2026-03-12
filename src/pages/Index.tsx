@@ -13,6 +13,71 @@ const PHOTOS = [
   { src: "/images/maglu-world-3.jpeg", caption: "Maglu World x House Gryffindor 🏆", year: "2025" },
 ];
 
+// ── Lazy image with blur-up placeholder ───────────────────────────────────
+function LazyImage({
+  src,
+  alt,
+  style,
+  draggable,
+}: {
+  src: string;
+  alt: string;
+  style?: React.CSSProperties;
+  draggable?: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  return (
+    <div style={{ position: 'relative', overflow: 'hidden', ...style, padding: 0 }}>
+      {/* Parchment shimmer placeholder shown until loaded */}
+      {!loaded && !error && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(110deg, #f0ebe0 30%, #faf6ee 50%, #f0ebe0 70%)',
+            backgroundSize: '200% 100%',
+            animation: 'imgShimmer 1.4s ease-in-out infinite',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span style={{ fontSize: '1.4rem', opacity: 0.35 }}>🔮</span>
+        </div>
+      )}
+      {error && (
+        <div style={{
+          position: 'absolute', inset: 0, background: '#f0ebe0',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '4px',
+        }}>
+          <span style={{ fontSize: '1.4rem' }}>🪄</span>
+          <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.5rem', color: '#8B6914' }}>Memory Lost</span>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        draggable={draggable}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+        style={{
+          ...style,
+          position: 'relative',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          display: 'block',
+          // Remove the outer container's conflicting position
+          top: 'unset', left: 'unset',
+        }}
+      />
+    </div>
+  );
+}
+
 // ── Floating magical particles ─────────────────────────────────────────────
 function MagicParticles() {
   return (
@@ -100,7 +165,7 @@ function QuidditchPhotoScroll() {
   const [isDragging, setIsDragging] = useState(false);
   const animRef = useRef<number>();
 
-  // Auto scroll
+  // Auto scroll — paused when dragging or lightbox open
   useEffect(() => {
     const track = trackRef.current;
     if (!track || isDragging || active !== null) return;
@@ -125,6 +190,19 @@ function QuidditchPhotoScroll() {
     trackRef.current!.scrollLeft = scrollStart - (e.pageX - dragStart);
   };
   const onMouseUp = () => setIsDragging(false);
+
+  // Touch support
+  const touchStartX = useRef<number>(0);
+  const touchScrollStart = useRef<number>(0);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].pageX;
+    touchScrollStart.current = trackRef.current?.scrollLeft ?? 0;
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!trackRef.current) return;
+    trackRef.current.scrollLeft = touchScrollStart.current - (e.touches[0].pageX - touchStartX.current);
+  };
 
   const allPhotos = [...PHOTOS, ...PHOTOS]; // duplicate for infinite feel
 
@@ -168,6 +246,8 @@ function QuidditchPhotoScroll() {
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUp}
           onMouseLeave={onMouseUp}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
           style={{
             display: 'flex', gap: '14px',
             overflowX: 'auto', padding: '16px 80px 24px',
@@ -180,6 +260,9 @@ function QuidditchPhotoScroll() {
             const realIdx = i % PHOTOS.length;
             const isActive = active === realIdx;
             const tilt = (i % 5 - 2) * 1.8;
+            // Only eagerly load first 2 unique photos; rest are lazy
+            const isEager = i < 2;
+
             return (
               <div
                 key={i}
@@ -214,19 +297,26 @@ function QuidditchPhotoScroll() {
                   {/* Top shimmer strip */}
                   <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,105,20,0.35), transparent)', marginBottom: '7px' }}/>
 
-                  {/* Image */}
-                  <div style={{ borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
+                  {/* Image with lazy loading */}
+                  <div style={{
+                    borderRadius: '3px', overflow: 'hidden', position: 'relative',
+                    height: isActive ? '190px' : '140px',
+                    transition: 'height 0.4s ease',
+                    background: '#f0ebe0',
+                  }}>
                     <img
                       src={photo.src}
                       alt={photo.caption}
                       draggable={false}
+                      loading={isEager ? "eager" : "lazy"}
+                      decoding="async"
                       style={{
                         width: '100%',
-                        height: isActive ? '190px' : '140px',
+                        height: '100%',
                         objectFit: 'cover',
                         display: 'block',
-                        transition: 'height 0.4s ease, filter 0.3s ease',
                         filter: isActive ? 'brightness(1) saturate(1)' : 'brightness(0.95) saturate(0.95)',
+                        transition: 'filter 0.3s ease',
                       }}
                     />
                     {isActive && (
@@ -312,11 +402,16 @@ function QuidditchPhotoScroll() {
               </span>
             </div>
 
-            {/* Image */}
-            <div style={{ borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
+            {/* Image — eager load since user explicitly opened it */}
+            <div style={{
+              borderRadius: '8px', overflow: 'hidden', position: 'relative',
+              minHeight: '200px', background: '#f0ebe0',
+            }}>
               <img
                 src={PHOTOS[active].src}
                 alt={PHOTOS[active].caption}
+                loading="eager"
+                decoding="async"
                 style={{ width: '100%', display: 'block', borderRadius: '8px' }}
               />
               <div style={{ position: 'absolute', top: '8px', right: '8px', fontSize: '1rem', animation: 'mgSnitch 1.5s ease-in-out infinite' }}>✨</div>
@@ -433,6 +528,10 @@ function HomePage() {
         @keyframes mgPopIn {
           from { transform: scale(0.8); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes imgShimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
 
         .mg-shimmer-text {
@@ -556,7 +655,7 @@ function HomePage() {
             <StatCard emoji="🎂" label="Years of Magic" value={`${AGE}`} color="#FFD700" />
             <StatCard emoji="🧙‍♀️" label="Spell Power" value="Infinite Audit" color="#9B59B6" />
             <StatCard emoji="🚞" label="Quests Completed" value="999+ Client Meet" color="#3498DB" />
-            <StatCard emoji="🍜" label="Culinary Magic" value="Maggie at 2 AM" color="#E74C3C" />          
+            <StatCard emoji="🍜" label="Culinary Magic" value="Maggie at 2 AM" color="#E74C3C" />
           </div>
 
           <MagicDivider />

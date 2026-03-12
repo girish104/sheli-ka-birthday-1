@@ -89,15 +89,18 @@ const Navbar = () => {
         .nav-link {
           position: relative;
           font-family: 'Cinzel', serif;
-          font-size: 0.7rem;
-          letter-spacing: 0.06em;
+          font-size: 0.65rem;
+          letter-spacing: 0.04em;
           color: #8B6914;
-          padding: 6px 14px;
+          padding: 5px 8px;
           border-radius: 6px;
           border: 1px solid transparent;
           transition: all 0.25s ease;
           white-space: nowrap;
           overflow: hidden;
+          display: flex;
+          align-items: center;
+          gap: 5px;
         }
 
         .nav-link::before {
@@ -131,7 +134,7 @@ const Navbar = () => {
         }
 
         .house-dot {
-          width: 6px; height: 6px;
+          width: 5px; height: 5px;
           border-radius: 50%;
           flex-shrink: 0;
           animation: nav-glow-pulse 2s ease-in-out infinite;
@@ -147,15 +150,21 @@ const Navbar = () => {
 
         .gold-divider {
           width: 1px;
-          height: 16px;
+          height: 14px;
           background: linear-gradient(to bottom, transparent, rgba(139,105,20,0.3), transparent);
+          flex-shrink: 0;
         }
 
         .lightning-bolt {
-          font-size: 0.65rem;
+          font-size: 0.6rem;
           color: #8B6914;
           opacity: 0.7;
           animation: nav-glow-pulse 1.8s ease-in-out infinite;
+        }
+
+        /* ── Mobile: shrink brand subtitle ── */
+        @media (max-width: 400px) {
+          .brand-subtitle { display: none; }
         }
       `}</style>
 
@@ -163,49 +172,61 @@ const Navbar = () => {
         initial={{ y: -70, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", bounce: 0.25, duration: 0.7 }}
-        className="navbar-bg fixed top-0 left-0 right-0 z-50 relative"
+        className="navbar-bg fixed top-0 left-0 right-0 z-50"
+        style={{ position: 'relative' }}
       >
-        <div className="container mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
+        {/* ── Single row, no container class that adds large side padding ── */}
+        <div style={{
+          width: '100%',
+          padding: '0 8px',
+          height: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '6px',
+          boxSizing: 'border-box',
+        }}>
 
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            {/* Animated wand tip indicator */}
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, textDecoration: 'none' }}>
             <div className="wand-tip" />
-            <div className="flex flex-col leading-none">
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
               <span
-                className="brand-shimmer font-black tracking-wide"
-                style={{ fontFamily: "'Cinzel', serif", fontSize: '0.85rem' }}
+                className="brand-shimmer"
+                style={{ fontFamily: "'Cinzel', serif", fontSize: '0.78rem', fontWeight: 900, letterSpacing: '0.04em' }}
               >
                 Magical Birthday
               </span>
               <span
-                className="text-gold-dark tracking-widest"
-                style={{ fontFamily: "'Cinzel', serif", fontSize: '0.55rem', color: '#b8a080', letterSpacing: '0.2em' }}
+                className="brand-subtitle"
+                style={{ fontFamily: "'Cinzel', serif", fontSize: '0.48rem', color: '#b8a080', letterSpacing: '0.12em', marginTop: '1px' }}
               >
                 HOGWARTS · {new Date().getFullYear()}
               </span>
             </div>
           </Link>
 
-          {/* Decorative center element */}
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+          {/* Decorative center — hidden on small screens */}
+          <div className="hidden sm:flex" style={{ display: 'none', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             <div className="gold-divider" />
             <span className="lightning-bolt">⚡</span>
-            <span style={{ color: 'rgba(139,105,20,0.2)', fontSize: '0.6rem' }}>✦</span>
+            <span style={{ color: 'rgba(139,105,20,0.25)', fontSize: '0.55rem' }}>✦</span>
             <span className="lightning-bolt">⚡</span>
             <div className="gold-divider" />
           </div>
 
           {/* Nav items */}
-          <div className="flex items-center gap-1">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flexShrink: 0 }}>
             {navItems.map((item, i) => {
               const isActive = location.pathname === item.path;
               return (
-                <div key={item.path} className="flex items-center gap-1">
-                  {i > 0 && <div className="gold-divider hidden sm:block" />}
+                <div key={item.path} style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                  {i > 0 && (
+                    <div className="gold-divider" style={{ display: 'block' }} />
+                  )}
                   <Link
                     to={item.path}
-                    className={`nav-link flex items-center gap-2 ${isActive ? "active" : ""}`}
+                    className={`nav-link ${isActive ? "active" : ""}`}
                   >
                     {/* House color dot */}
                     <div
@@ -220,16 +241,20 @@ const Navbar = () => {
                     <img
                       src={item.icon}
                       alt={item.label}
-                      className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
                       style={{
+                        width: '16px',
+                        height: '16px',
+                        flexShrink: 0,
                         filter: isActive
                           ? `drop-shadow(0 0 4px ${item.accent})`
                           : 'grayscale(40%) brightness(0.7)',
                         transition: 'filter 0.25s ease',
                       }}
                     />
-                    {/* Label — hide on mobile for the non-active items */}
-                    <span className={`${isActive ? 'inline' : 'hidden sm:inline'}`}>
+                    {/* Label — only on sm+ screens */}
+                    <span style={{
+                      display: 'none',
+                    }} className="sm:inline nav-label">
                       {item.label}
                     </span>
                   </Link>
@@ -250,6 +275,14 @@ const Navbar = () => {
           }}
         />
       </motion.nav>
+
+      {/* Show labels on sm+ via a style tag since Tailwind classes in inline JSX can be tricky */}
+      <style>{`
+        @media (min-width: 640px) {
+          .nav-label { display: inline !important; }
+          .hidden.sm\\:flex { display: flex !important; }
+        }
+      `}</style>
     </>
   );
 };
