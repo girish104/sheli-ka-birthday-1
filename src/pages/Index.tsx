@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 const SISTER_NAME = "Sheli";
 const AGE = 22;
 
-// ── Replace these src values with real photo URLs or imports ───────────────
 const PHOTOS = [
   { src: "/images/platform.jpeg", caption: "Platform 9¾", year: "2024" },
   { src: "/images/rain.png", caption: "The Chosen One ⚡", year: "2024" },
@@ -12,71 +11,6 @@ const PHOTOS = [
   { src: "/images/maglu-world-2.jpeg", caption: "Maglu World", year: "2025" },
   { src: "/images/maglu-world-3.jpeg", caption: "Maglu World x House Gryffindor 🏆", year: "2025" },
 ];
-
-// ── Lazy image with blur-up placeholder ───────────────────────────────────
-function LazyImage({
-  src,
-  alt,
-  style,
-  draggable,
-}: {
-  src: string;
-  alt: string;
-  style?: React.CSSProperties;
-  draggable?: boolean;
-}) {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
-
-  return (
-    <div style={{ position: 'relative', overflow: 'hidden', ...style, padding: 0 }}>
-      {/* Parchment shimmer placeholder shown until loaded */}
-      {!loaded && !error && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(110deg, #f0ebe0 30%, #faf6ee 50%, #f0ebe0 70%)',
-            backgroundSize: '200% 100%',
-            animation: 'imgShimmer 1.4s ease-in-out infinite',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span style={{ fontSize: '1.4rem', opacity: 0.35 }}>🔮</span>
-        </div>
-      )}
-      {error && (
-        <div style={{
-          position: 'absolute', inset: 0, background: '#f0ebe0',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '4px',
-        }}>
-          <span style={{ fontSize: '1.4rem' }}>🪄</span>
-          <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.5rem', color: '#8B6914' }}>Memory Lost</span>
-        </div>
-      )}
-      <img
-        src={src}
-        alt={alt}
-        draggable={draggable}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
-        style={{
-          ...style,
-          position: 'relative',
-          opacity: loaded ? 1 : 0,
-          transition: 'opacity 0.45s ease',
-          display: 'block',
-          // Remove the outer container's conflicting position
-          top: 'unset', left: 'unset',
-        }}
-      />
-    </div>
-  );
-}
 
 // ── Floating magical particles ─────────────────────────────────────────────
 function MagicParticles() {
@@ -142,16 +76,36 @@ function StatCard({ emoji, label, value, color }: { emoji: string; label: string
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        borderRadius: '12px', padding: '16px', textAlign: 'center',
-        border: `1px solid ${color}55`, background: 'rgba(250,248,243,0.7)',
+        borderRadius: '12px',
+        padding: '12px 8px',
+        textAlign: 'center',
+        border: `1px solid ${color}55`,
+        background: 'rgba(250,248,243,0.7)',
         boxShadow: hovered ? `0 0 20px ${color}55` : `0 0 12px ${color}33`,
         transform: hovered ? 'scale(1.05)' : 'scale(1)',
-        transition: 'all 0.3s ease', cursor: 'default', position: 'relative',
+        transition: 'all 0.3s ease',
+        cursor: 'default',
+        position: 'relative',
+        minWidth: 0, // allows grid cells to shrink
       }}
     >
-      <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>{emoji}</div>
-      <div style={{ color, fontFamily: "'Cinzel', serif", fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '4px' }}>{value}</div>
-      <div style={{ color: '#6b5a4a', fontFamily: "'Crimson Text', serif", fontSize: '0.75rem' }}>{label}</div>
+      <div style={{ fontSize: '1.5rem', marginBottom: '6px' }}>{emoji}</div>
+      <div style={{
+        color,
+        fontFamily: "'Cinzel', serif",
+        fontSize: 'clamp(0.52rem, 2vw, 0.8rem)',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
+        marginBottom: '4px',
+        lineHeight: 1.3,
+        wordBreak: 'break-word',
+      }}>{value}</div>
+      <div style={{
+        color: '#6b5a4a',
+        fontFamily: "'Crimson Text', serif",
+        fontSize: 'clamp(0.6rem, 1.8vw, 0.75rem)',
+        lineHeight: 1.2,
+      }}>{label}</div>
     </div>
   );
 }
@@ -165,7 +119,6 @@ function QuidditchPhotoScroll() {
   const [isDragging, setIsDragging] = useState(false);
   const animRef = useRef<number>();
 
-  // Auto scroll — paused when dragging or lightbox open
   useEffect(() => {
     const track = trackRef.current;
     if (!track || isDragging || active !== null) return;
@@ -191,7 +144,6 @@ function QuidditchPhotoScroll() {
   };
   const onMouseUp = () => setIsDragging(false);
 
-  // Touch support
   const touchStartX = useRef<number>(0);
   const touchScrollStart = useRef<number>(0);
   const onTouchStart = (e: React.TouchEvent) => {
@@ -204,7 +156,7 @@ function QuidditchPhotoScroll() {
     trackRef.current.scrollLeft = touchScrollStart.current - (e.touches[0].pageX - touchStartX.current);
   };
 
-  const allPhotos = [...PHOTOS, ...PHOTOS]; // duplicate for infinite feel
+  const allPhotos = [...PHOTOS, ...PHOTOS];
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
@@ -236,9 +188,17 @@ function QuidditchPhotoScroll() {
 
       {/* Scroll viewport */}
       <div style={{ position: 'relative' }}>
-        {/* Edge fades */}
-        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '70px', zIndex: 2, pointerEvents: 'none', background: 'linear-gradient(to right, #ffffff, transparent)' }}/>
-        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '70px', zIndex: 2, pointerEvents: 'none', background: 'linear-gradient(to left, #ffffff, transparent)' }}/>
+        {/* ── Subtle edge fades — 36px wide, 85% opacity (was 70px, 100% white) ── */}
+        <div style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0, width: '36px', zIndex: 2,
+          pointerEvents: 'none',
+          background: 'linear-gradient(to right, rgba(255,255,255,0.85), transparent)',
+        }}/>
+        <div style={{
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: '36px', zIndex: 2,
+          pointerEvents: 'none',
+          background: 'linear-gradient(to left, rgba(255,255,255,0.85), transparent)',
+        }}/>
 
         <div
           ref={trackRef}
@@ -250,7 +210,7 @@ function QuidditchPhotoScroll() {
           onTouchMove={onTouchMove}
           style={{
             display: 'flex', gap: '14px',
-            overflowX: 'auto', padding: '16px 80px 24px',
+            overflowX: 'auto', padding: '16px 48px 24px',
             scrollbarWidth: 'none', msOverflowStyle: 'none',
             cursor: isDragging ? 'grabbing' : 'grab',
             userSelect: 'none', WebkitUserSelect: 'none',
@@ -260,7 +220,6 @@ function QuidditchPhotoScroll() {
             const realIdx = i % PHOTOS.length;
             const isActive = active === realIdx;
             const tilt = (i % 5 - 2) * 1.8;
-            // Only eagerly load first 2 unique photos; rest are lazy
             const isEager = i < 2;
 
             return (
@@ -278,8 +237,8 @@ function QuidditchPhotoScroll() {
                 }}
               >
                 {/* Hanging pin */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0px' }}>
-                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8B6914', border: '1px solid rgba(139,105,20,0.4)', marginBottom: '0' }}/>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8B6914', border: '1px solid rgba(139,105,20,0.4)' }}/>
                   <div style={{ width: '1px', height: '12px', background: 'linear-gradient(to bottom, rgba(139,105,20,0.4), rgba(139,105,20,0.1))' }}/>
                 </div>
 
@@ -291,13 +250,12 @@ function QuidditchPhotoScroll() {
                   padding: '7px 7px 28px',
                   boxShadow: isActive
                     ? '0 8px 16px rgba(0,0,0,0.06), 0 0 12px rgba(139,105,20,0.1)'
-                    : '0 2px 8px rgba(0,0,0,0.04), 0 0 4px rgba(139,105,20,0.05)',
+                    : '0 2px 8px rgba(0,0,0,0.04)',
                   transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
                 }}>
-                  {/* Top shimmer strip */}
                   <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,105,20,0.35), transparent)', marginBottom: '7px' }}/>
 
-                  {/* Image with lazy loading */}
+                  {/* Image */}
                   <div style={{
                     borderRadius: '3px', overflow: 'hidden', position: 'relative',
                     height: isActive ? '190px' : '140px',
@@ -349,7 +307,7 @@ function QuidditchPhotoScroll() {
         <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,105,20,0.3), transparent)' }}/>
       </div>
 
-      {/* ── Lightbox with Prev / Next navigation ── */}
+      {/* Lightbox */}
       {active !== null && (
         <div
           onClick={() => setActive(null)}
@@ -372,7 +330,6 @@ function QuidditchPhotoScroll() {
               animation: 'mgPopIn 0.3s cubic-bezier(0.34,1.56,0.64,1)',
             }}
           >
-            {/* Close button */}
             <button
               onClick={() => setActive(null)}
               style={{
@@ -387,10 +344,8 @@ function QuidditchPhotoScroll() {
               onMouseLeave={e => (e.currentTarget.style.transform = 'rotate(0deg)')}
             >✕</button>
 
-            {/* Top shimmer */}
             <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,105,20,0.5), transparent)', marginBottom: '12px' }}/>
 
-            {/* Counter badge */}
             <div style={{ textAlign: 'center', marginBottom: '12px' }}>
               <span style={{
                 display: 'inline-block', padding: '3px 14px', borderRadius: '20px',
@@ -402,11 +357,7 @@ function QuidditchPhotoScroll() {
               </span>
             </div>
 
-            {/* Image — eager load since user explicitly opened it */}
-            <div style={{
-              borderRadius: '8px', overflow: 'hidden', position: 'relative',
-              minHeight: '200px', background: '#f0ebe0',
-            }}>
+            <div style={{ borderRadius: '8px', overflow: 'hidden', position: 'relative', minHeight: '200px', background: '#f0ebe0' }}>
               <img
                 src={PHOTOS[active].src}
                 alt={PHOTOS[active].caption}
@@ -417,7 +368,6 @@ function QuidditchPhotoScroll() {
               <div style={{ position: 'absolute', top: '8px', right: '8px', fontSize: '1rem', animation: 'mgSnitch 1.5s ease-in-out infinite' }}>✨</div>
             </div>
 
-            {/* Caption */}
             <div style={{ textAlign: 'center', marginTop: '14px', marginBottom: '18px' }}>
               <p style={{ fontFamily: "'Crimson Text', serif", fontStyle: 'italic', fontSize: '1.1rem', color: '#8B6914' }}>
                 {PHOTOS[active].caption}
@@ -427,10 +377,8 @@ function QuidditchPhotoScroll() {
               </p>
             </div>
 
-            {/* Divider */}
             <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,105,20,0.3), transparent)', marginBottom: '16px' }}/>
 
-            {/* Prev / Next */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
               <button
                 onClick={() => setActive((active - 1 + PHOTOS.length) % PHOTOS.length)}
@@ -529,10 +477,6 @@ function HomePage() {
           from { transform: scale(0.8); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
         }
-        @keyframes imgShimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
 
         .mg-shimmer-text {
           background: linear-gradient(90deg, #8B6914, #C0A060, #8B6914);
@@ -547,9 +491,22 @@ function HomePage() {
         .mg-sparkle { animation: mgSparkle 0.8s ease-out forwards; }
 
         div::-webkit-scrollbar { display: none; }
+
+        /* ── Responsive stats: 4-col on desktop, 2x2 on mobile ── */
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 12px;
+          margin: 24px 0;
+        }
+        @media (max-width: 520px) {
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+          }
+        }
       `}</style>
 
-      {/* Click sparkles */}
       {sparkles.map(s => (
         <div key={s.id} className="mg-sparkle" style={{
           position: 'fixed', left: s.x - 12, top: s.y - 12,
@@ -574,7 +531,6 @@ function HomePage() {
       >
         <MagicParticles />
 
-        {/* Candles */}
         {[{ side: 'left', left: 24 }, { side: 'right', right: 24 }].map(({ side, ...pos }) => (
           <div key={side} style={{ position: 'fixed', top: 0, display: 'flex', gap: '32px', pointerEvents: 'none', ...pos }}>
             {[0,1,2].map(i => (
@@ -588,14 +544,13 @@ function HomePage() {
           className="mg-card-glow"
           style={{
             position: 'relative', width: '100%', maxWidth: '860px',
-            borderRadius: '18px', padding: '32px', zIndex: 10,
+            borderRadius: '18px', padding: '32px 20px', zIndex: 10,
             background: 'linear-gradient(160deg, rgba(250,248,243,0.98) 0%, rgba(245,242,235,0.99) 100%)',
             border: '1px solid rgba(139,105,20,0.3)',
             fontFamily: "'Crimson Text', serif",
             overflow: 'hidden',
           }}
         >
-          {/* Corner ornaments */}
           {[
             { top: 8, left: 8, borderWidth: '2px 0 0 2px' },
             { top: 8, right: 8, borderWidth: '2px 2px 0 0' },
@@ -604,7 +559,6 @@ function HomePage() {
           ].map((s, i) => (
             <div key={i} style={{ position: 'absolute', width: 50, height: 50, borderColor: 'rgba(139,105,20,0.4)', borderStyle: 'solid', ...s }}/>
           ))}
-          {/* Inner house glows */}
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 0% 0%, rgba(116,0,1,0.12) 0%, transparent 40%), radial-gradient(ellipse at 100% 100%, rgba(26,71,42,0.1) 0%, transparent 40%), radial-gradient(ellipse at 100% 0%, rgba(14,26,64,0.12) 0%, transparent 40%)`, pointerEvents: 'none' }}/>
 
           {/* Header */}
@@ -613,16 +567,16 @@ function HomePage() {
               <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', filter: 'blur(20px)', background: 'radial-gradient(circle, #FFD70044 0%, transparent 70%)' }}/>
               <HogwartsCrest />
             </div>
-            <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.62rem', letterSpacing: '0.3em', color: '#8B6914', marginBottom: '8px' }}>THE WIZARDING WORLD CELEBRATES</p>
-            <h1 className="mg-shimmer-text" style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(2.4rem,8vw,3.4rem)', fontWeight: 900, lineHeight: 1.1 }}>
+            <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.62rem', letterSpacing: '0.3em', color: '#8B6914', marginBottom: '8px', textAlign: 'center' }}>THE WIZARDING WORLD CELEBRATES</p>
+            <h1 className="mg-shimmer-text" style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(2.4rem,8vw,3.4rem)', fontWeight: 900, lineHeight: 1.1, textAlign: 'center' }}>
               {SISTER_NAME}'s
             </h1>
-            <h2 className="mg-title-glow" style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(1.4rem,5vw,2rem)', fontWeight: 700, marginTop: '4px' }}>
+            <h2 className="mg-title-glow" style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(1.4rem,5vw,2rem)', fontWeight: 700, marginTop: '4px', textAlign: 'center' }}>
               Magical Birthday
             </h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center', padding: '0 8px' }}>
               <span style={{ color: '#8B6914' }}>⚡</span>
-              <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.78rem', color: '#C0A060' }}>Year {AGE} — Hermione Granger Energy, Ron Weasley Bank Account</span>
+              <span style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(0.52rem, 2.5vw, 0.78rem)', color: '#C0A060', textAlign: 'center' }}>Year {AGE} — Hermione Granger Energy, Ron Weasley Bank Account</span>
               <span style={{ color: '#8B6914' }}>⚡</span>
             </div>
           </div>
@@ -630,7 +584,7 @@ function HomePage() {
           <MagicDivider />
 
           {/* House badges */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', margin: '20px 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', margin: '20px 0', flexWrap: 'wrap' }}>
             {[
               { house: 'Gryffindor', color: '#740001', icon: '🦁', trait: 'Attempt' },
               { house: 'Hufflepuff', color: '#ecb939', icon: '🦡', trait: 'Attempt' },
@@ -650,8 +604,8 @@ function HomePage() {
 
           <MagicDivider />
 
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', margin: '24px 0' }}>
+          {/* ── Stats grid — 4-col desktop, 2×2 mobile ── */}
+          <div className="stats-grid">
             <StatCard emoji="🎂" label="Years of Magic" value={`${AGE}`} color="#FFD700" />
             <StatCard emoji="🧙‍♀️" label="Spell Power" value="Infinite Audit" color="#9B59B6" />
             <StatCard emoji="🚞" label="Quests Completed" value="999+ Client Meet" color="#3498DB" />
@@ -661,7 +615,7 @@ function HomePage() {
           <MagicDivider />
 
           {/* Quote */}
-          <div style={{ opacity: showQuote ? 1 : 0, transform: showQuote ? 'translateY(0)' : 'translateY(16px)', transition: 'opacity 1s ease, transform 1s ease', textAlign: 'center', padding: '0 16px', marginTop: '16px' }}>
+          <div style={{ opacity: showQuote ? 1 : 0, transform: showQuote ? 'translateY(0)' : 'translateY(16px)', transition: 'opacity 1s ease, transform 1s ease', textAlign: 'center', padding: '0 8px', marginTop: '16px' }}>
             <div style={{ position: 'relative', padding: '20px', borderRadius: '12px', background: 'rgba(255,215,0,0.04)', border: '1px solid rgba(255,215,0,0.15)' }}>
               <span style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', color: '#b8860b', fontSize: '2.5rem', lineHeight: 1 }}>"</span>
               <p style={{ fontFamily: "'Crimson Text', serif", fontStyle: 'italic', fontSize: '1.1rem', color: '#D4B896', lineHeight: 1.6 }}>
@@ -673,7 +627,7 @@ function HomePage() {
           <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#4a3a20', fontFamily: "'Crimson Text', serif", marginTop: '20px' }}>✨ Click anywhere to cast sparkles</p>
         </div>
 
-        {/* ── Quidditch Photo Scroll Section ── */}
+        {/* ── Photo Scroll Section ── */}
         <div style={{ width: '100%', maxWidth: '900px', marginTop: '48px', zIndex: 10, position: 'relative' }}>
           <div style={{
             background: '#ffffff',
@@ -683,7 +637,6 @@ function HomePage() {
             position: 'relative', overflow: 'hidden',
             boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
           }}>
-            {/* Corner house glows inside scroll card */}
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100px', height: '100px', background: 'radial-gradient(circle, rgba(116,0,1,0.04) 0%, transparent 70%)', pointerEvents: 'none' }}/>
             <div style={{ position: 'absolute', top: 0, right: 0, width: '100px', height: '100px', background: 'radial-gradient(circle, rgba(14,26,64,0.04) 0%, transparent 70%)', pointerEvents: 'none' }}/>
             <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100px', height: '100px', background: 'radial-gradient(circle, rgba(201,162,39,0.02) 0%, transparent 70%)', pointerEvents: 'none' }}/>
