@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 45 100% 97%;
+    --foreground: 330 60% 15%;
+
+    --card: 45 80% 95%;
+    --card-foreground: 330 60% 15%;
+
+    --popover: 45 100% 97%;
+    --popover-foreground: 330 60% 15%;
+
+    --primary: 330 85% 50%;
+    --primary-foreground: 45 100% 97%;
+
+    --secondary: 38 95% 55%;
+    --secondary-foreground: 330 60% 15%;
+
+    --muted: 30 40% 90%;
+    --muted-foreground: 330 20% 40%;
+
+    --accent: 25 95% 55%;
+    --accent-foreground: 45 100% 97%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 38 50% 80%;
+    --input: 38 50% 80%;
+    --ring: 330 85% 50%;
+
+    --radius: 1rem;
+
+    --gold: 43 96% 56%;
+    --gold-foreground: 330 60% 15%;
+    --magenta: 330 85% 50%;
+    --magenta-glow: 330 90% 65%;
+    --saffron: 25 95% 55%;
+    --festive-yellow: 48 100% 60%;
+    --desi-green: 140 60% 40%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Baloo 2', cursive;
+  }
+}
+
+@layer components {
+  .font-heading {
+    font-family: 'Baloo 2', cursive;
+  }
+
+  .font-body {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .font-hindi {
+    font-family: 'Tiro Devanagari Hindi', serif;
+  }
+
+  .text-gradient-desi {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--magenta)), hsl(var(--saffron)), hsl(var(--gold)));
+  }
+
+  .bg-gradient-desi {
+    background: linear-gradient(135deg, hsl(var(--magenta)), hsl(var(--saffron)));
+  }
+
+  .bg-gradient-festive {
+    background: linear-gradient(135deg, hsl(var(--festive-yellow)), hsl(var(--saffron)), hsl(var(--magenta)));
+  }
+
+  .card-desi {
+    @apply rounded-2xl border-2 overflow-hidden;
+    border-color: hsl(var(--gold) / 0.5);
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background)));
+    box-shadow: 0 4px 20px hsl(var(--magenta) / 0.1), 0 0 40px hsl(var(--gold) / 0.08);
+  }
+
+  .text-3d {
+    text-shadow:
+      2px 2px 0 hsl(var(--saffron)),
+      4px 4px 0 hsl(var(--gold) / 0.6),
+      6px 6px 0 hsl(var(--magenta) / 0.3),
+      8px 8px 15px hsl(var(--magenta) / 0.2);
+  }
+
+  .glow-magenta {
+    box-shadow: 0 0 20px hsl(var(--magenta) / 0.4), 0 0 60px hsl(var(--magenta) / 0.15);
+  }
+
+  .hover-bounce {
+    @apply transition-transform duration-300;
+  }
+  .hover-bounce:hover {
+    transform: scale(1.05) rotate(-1deg);
+  }
+
+  /* Lumos hover glow for images */
+  .lumos-hover {
+    @apply transition-all duration-500;
+  }
+  .lumos-hover:hover {
+    box-shadow: 0 0 25px hsl(210, 80%, 65% / 0.5), 0 0 60px hsl(210, 90%, 70% / 0.25);
+    filter: brightness(1.1);
+  }
+
+  /* Spell spark button effect */
+  .spell-spark {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+  .spell-spark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--spark-x, 50%) var(--spark-y, 50%), hsl(43, 96%, 76% / 0.4) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .spell-spark:hover::after {
+    opacity: 1;
+  }
+  .spell-spark:hover {
+    box-shadow: 0 0 15px hsl(43, 96%, 56% / 0.4), 0 0 30px hsl(330, 85%, 50% / 0.15);
+  }
+
+  /* Parchment overlay */
+  .parchment-overlay {
+    position: relative;
+  }
+  .parchment-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 28px,
+        hsl(38, 40%, 60% / 0.04) 28px,
+        hsl(38, 40%, 60% / 0.04) 29px
+      );
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+  }
+
+  /* Gold foil accent */
+  .gold-foil-accent {
+    background-image: linear-gradient(135deg, hsl(43, 96%, 56% / 0.15), transparent 50%, hsl(43, 96%, 56% / 0.1));
+  }
+
+  /* Candle flame flicker */
+  .candle-flame {
+    background: radial-gradient(ellipse at center bottom, hsl(48, 100%, 60%), hsl(30, 100%, 50%) 50%, hsl(15, 100%, 40%) 80%, transparent);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.8s ease-in-out infinite alternate;
+  }
+
+  /* Golden snitch glow */
+  .golden-glow-dot {
+    filter: drop-shadow(0 0 6px hsl(43, 96%, 56% / 0.6));
+  }
+
+  /* Patronus ethereal glow */
+  .patronus-glow {
+    filter: drop-shadow(0 0 10px hsl(200, 80%, 70% / 0.5));
+  }
+
+  /* Mist effect */
+  .mist-effect {
+    position: relative;
+  }
+  .mist-effect::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to top, hsl(var(--background)), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* Floating diya animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(5deg); }
+  75% { transform: translateY(-8px) rotate(-3deg); }
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes flicker {
+  0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+  25% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+  50% { transform: scale(0.95) rotate(-1deg); opacity: 0.85; }
+  75% { transform: scale(1.02) rotate(2deg); opacity: 1; }
+  100% { transform: scale(0.98) rotate(-1deg); opacity: 0.9; }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 1s ease-in-out infinite;
+}
