@@ -5,12 +5,12 @@ const AGE = 22;
 
 // ── Replace these src values with real photo URLs or imports ───────────────
 const PHOTOS = [
-  { src: "/src/assets/images/platform.jpeg", caption: "Platform 9¾", year: "2024" },
-  { src: "/src/assets/images/rain.png", caption: "The Chosen One ⚡", year: "2024" },
-  { src: "/src/assets/images/maglu-world.jpeg", caption: "Maglu World", year: "2025" },
-  { src: "/src/assets/images/ganpati.png", caption: "Ganpati Pooja at Hogwarts", year: "2025" },
-  { src: "/src/assets/images/maglu-world-2.jpeg", caption: "Maglu World", year: "2025" },
-  { src: "/src/assets/images/maglu-world-3.jpeg", caption: "Maglu World x House Gryffindor 🏆", year: "2025" },
+  { src: "/images/platform.jpeg", caption: "Platform 9¾", year: "2024" },
+  { src: "/images/rain.png", caption: "The Chosen One ⚡", year: "2024" },
+  { src: "/images/maglu-world.jpeg", caption: "Maglu World", year: "2025" },
+  { src: "/images/ganpati.png", caption: "Ganpati Pooja at Hogwarts", year: "2025" },
+  { src: "/images/maglu-world-2.jpeg", caption: "Maglu World", year: "2025" },
+  { src: "/images/maglu-world-3.jpeg", caption: "Maglu World x House Gryffindor 🏆", year: "2025" },
 ];
 
 // ── Floating magical particles ─────────────────────────────────────────────
